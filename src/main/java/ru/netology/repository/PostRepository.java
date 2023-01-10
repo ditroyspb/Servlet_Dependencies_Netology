@@ -1,17 +1,14 @@
 package ru.netology.repository;
 
+import org.springframework.stereotype.Repository;
 import ru.netology.model.Post;
-
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
-// Stub
+@Repository
 public class PostRepository {
     Long countId = 1L;
 
-    //    CopyOnWriteArrayList<Post> posts = new CopyOnWriteArrayList<>(); //потокобезопасный, но "тяжелый" вариант
-//final public List<Post> posts = new ArrayList<>();
     final public ConcurrentHashMap<Long, Post> posts = new ConcurrentHashMap<>();
 
     public List<Post> all() {
