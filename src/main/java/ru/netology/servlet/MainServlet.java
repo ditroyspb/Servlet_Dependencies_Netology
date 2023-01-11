@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 
 public class MainServlet extends HttpServlet {
   private PostController controller;
-  private PostRepository repository;
 
   @Override
   public void init() {
@@ -21,13 +20,8 @@ public class MainServlet extends HttpServlet {
     // отдаём список пакетов, в которых нужно искать аннотированные классы
     final var context = new AnnotationConfigApplicationContext("ru.netology");
 
-    // получаем по имени бина
-    controller = (PostController) context.getBean("postController");
-
     // получаем по классу бина
-    final var service = context.getBean(PostService.class);
-
-    repository = context.getBean(PostRepository.class);
+    controller = context.getBean(PostController.class);
   }
 
   @Override
@@ -45,8 +39,6 @@ public class MainServlet extends HttpServlet {
         // easy way
         final var id = findId(path);
 
-        check404(id, resp);
-
         controller.getById(id, resp);
 
         return;
@@ -59,7 +51,6 @@ public class MainServlet extends HttpServlet {
         // easy way
         final var id = findId(path);
 
-        check404(id, resp);
 
         controller.removeById(id, resp);
         return;
@@ -74,10 +65,5 @@ public class MainServlet extends HttpServlet {
     return Long.parseLong(path.substring(path.lastIndexOf("/") + 1));
   }
 
-  private void check404(long id, HttpServletResponse resp) {
-    if (!repository.posts.containsKey(id)) {
-      resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-    }
-  }
 }
 
