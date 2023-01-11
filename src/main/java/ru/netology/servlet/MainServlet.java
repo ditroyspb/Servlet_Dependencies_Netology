@@ -1,5 +1,7 @@
 package ru.netology.servlet;
 
+import org.springframework.context.annotation.AnnotationConfigApplicationContext; // по новому ДЗ
+
 import ru.netology.controller.PostController;
 import ru.netology.model.Post;
 import ru.netology.repository.PostRepository;
@@ -11,13 +13,15 @@ import javax.servlet.http.HttpServletResponse;
 
 public class MainServlet extends HttpServlet {
   private PostController controller;
-  private PostRepository repository;
 
   @Override
   public void init() {
-    repository = new PostRepository();
-    final var service = new PostService(repository);
-    controller = new PostController(service);
+
+    // отдаём список пакетов, в которых нужно искать аннотированные классы
+    final var context = new AnnotationConfigApplicationContext("ru.netology");
+
+    // получаем по классу бина
+    controller = context.getBean(PostController.class);
   }
 
   @Override
@@ -35,8 +39,6 @@ public class MainServlet extends HttpServlet {
         // easy way
         final var id = findId(path);
 
-        check404(id, resp);
-
         controller.getById(id, resp);
 
         return;
@@ -49,7 +51,6 @@ public class MainServlet extends HttpServlet {
         // easy way
         final var id = findId(path);
 
-        check404(id, resp);
 
         controller.removeById(id, resp);
         return;
@@ -64,10 +65,5 @@ public class MainServlet extends HttpServlet {
     return Long.parseLong(path.substring(path.lastIndexOf("/") + 1));
   }
 
-  private void check404(long id, HttpServletResponse resp) {
-    if (!repository.posts.containsKey(id)) {
-      resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-    }
-  }
 }
 
