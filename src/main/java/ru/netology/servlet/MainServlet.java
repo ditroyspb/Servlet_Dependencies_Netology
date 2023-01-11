@@ -2,6 +2,7 @@ package ru.netology.servlet;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext; // по новому ДЗ
 
+import ru.netology.config.JavaConfig;
 import ru.netology.controller.PostController;
 import ru.netology.model.Post;
 import ru.netology.repository.PostRepository;
@@ -19,7 +20,7 @@ public class MainServlet extends HttpServlet {
   public void init() {
 
     // отдаём список пакетов, в которых нужно искать аннотированные классы
-    final var context = new AnnotationConfigApplicationContext("ru.netology");
+    final var context = new AnnotationConfigApplicationContext(JavaConfig.class);
 
     // получаем по имени бина
     controller = (PostController) context.getBean("postController");

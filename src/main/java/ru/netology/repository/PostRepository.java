@@ -5,7 +5,6 @@ import ru.netology.model.Post;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Repository
 public class PostRepository {
     Long countId = 1L;
 
